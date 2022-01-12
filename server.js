@@ -8,13 +8,17 @@ app.get('/users', (req, res) => {
     res.json(users);
 });
 
-app.post('/users', async (req, rest) => {
+app.post('/users', async (req, res) => {
     try {
-        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(req.body.password, 10)
+        console.log(salt);
+        console.log(hashedPassword);
+        const user = {user: req.body.name, password: hashedPassword};
+        users.push(user);
+        res.status(201).send();
+    } catch {
+        res.status(500).send();
     }
-    const user = {user: req.body.name, password: req.body.password};
-    users.push(user);
-    res.status(201).send();
 
 })
 
